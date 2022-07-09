@@ -1,0 +1,32 @@
+---
+- name: "update apt packages"
+  become: yes
+  apt: 
+    update_cache: yes
+
+- name: "upgrade packages"
+  become: yes
+  apt:
+    upgrade: yes
+  
+- name: "Install Nodejs and npm"
+  become: yes    
+  apt:
+    name: ["nodejs", "npm"]
+    state: latest
+
+- name: "Install pm2"
+  become: yes
+  npm:
+    name: pm2
+    global: yes 
+
+# - name: Check for Python
+#   raw: test -e /usr/bin/python
+#   changed_when: false
+#   failed_when: false
+#   register: check_python
+
+# - name: Install Python
+#   raw: apt -y install python
+#   when: check_python.rc != 0 
