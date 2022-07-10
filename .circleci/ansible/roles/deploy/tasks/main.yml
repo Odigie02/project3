@@ -1,0 +1,22 @@
+---
+
+- name: "Extract artifact to EC2"
+  unarchive:
+    src: ~/project/artifact.tar.gz
+    dest: /home/ubuntu
+    
+- name: "Install Nodejs and npm"
+  become: yes    
+  apt:
+    name: ["nodejs", "npm"]
+    state: latest
+
+- name: "Install pm2"
+  become: yes
+  npm:
+    name: pm2
+    global: yes 
+ 
+- name: "Start application"
+  command:
+    cmd: pm2 start npm -- start
