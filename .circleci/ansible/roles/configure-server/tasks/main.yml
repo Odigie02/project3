@@ -21,12 +21,12 @@
     name: pm2
     global: yes 
 
-# - name: Check for Python
-#   raw: test -e /usr/bin/python
-#   changed_when: false
-#   failed_when: false
-#   register: check_python
+- name: Check for Python
+  raw: test -e /usr/bin/python
+  changed_when: false
+  failed_when: false
+  register: check_python
 
-# - name: Install Python
-#   raw: apt -y install python
-#   when: check_python.rc != 0 
+- name: Install Python
+  raw: apt -y install python
+  when: check_python.rc != 0 
