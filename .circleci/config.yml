@@ -406,9 +406,9 @@ jobs:
             --parameter-overrides WorkflowID="udapeople-${CIRCLE_WORKFLOW_ID:0:7}" \
             --tags project=udapeople
       - persist_to_workspace:
-        root: ~/
-        paths: 
-          - oldbucketid.txt  
+          root: ~/
+          paths: 
+            - oldbucketid.txt  
       - attach_workspace:
           at: ~/
       - destroy-environment:
