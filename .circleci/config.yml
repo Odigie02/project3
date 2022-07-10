@@ -358,12 +358,12 @@ jobs:
           command: |
             tail -n 1 ~/project/.circleci/ansible/inventory.txt > backendIP.txt
             BACKEND_IP=$(cat backendIP.txt)
-            export API_URL="http://${BACKEND_IP}:3030"
+            export API_URL="http://${BACKEND_IP}:3030/appi/status"
             echo "${API_URL}"
       - run:
           name: Backend smoke test.
           command: |
-            if curl "${API_URL}/api/status" | grep "ok"
+            if curl "${API_URL}" | grep "ok"
             then
               exit 0
             else
