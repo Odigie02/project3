@@ -16,11 +16,6 @@ commands:
             aws s3 rm s3://udapeople-<<parameters.workflow_id>> --recursive
             aws cloudformation delete-stack --stack-name frontend-<<parameters.workflow_id>>
 
-
-            # aws cloudformation delete-stack --stack-name backend-<<parameters.workflow_id>>
-            # aws cloudformation delete-stack --stack-name frontend-<<parameters.workflow_id>>
-            
-
   revert-migrations:
     description: Revert the last migration if successfully run in the current workflow.
     parameters:
@@ -356,18 +351,20 @@ jobs:
       - run:
           name: Get backend url
           command: |
-            tail -n 1 ~/project/.circleci/ansible/inventory.txt > backendIP.txt
-            BACKEND_IP=$(cat backendIP.txt)
-            export API_URL="http://${BACKEND_IP}:3030/appi/status"
+            BACKEND_IP=$(aws cloudformation \
+            list-exports --query "Exports[?Name==\`backendIP\`].Value" \
+            --no-paginate --output text)
+            export API_URL="http://${BACKEND_IP}:3030"
             echo "${API_URL}"
+
       - run:
           name: Backend smoke test.
           command: |
-            if curl "${API_URL}" | grep "ok"
+            if curl "${API_URL}/api/status" | grep "ok"
             then
-              exit 0
+              return 0
             else
-              exit 1
+              return 1
             fi
       - run:
           name: Frontend smoke test.
@@ -392,7 +389,14 @@ jobs:
       - run:
           name: Install dependencies
           command: |
-            yum install tar gzip -y  
+            yum install tar gzip -y
+      - run:
+          name: Fetch and save the old bucket ID responsible for the last release.
+          command: |
+            aws cloudformation \
+            list-exports --query "Exports[?Name==\`WorkflowID\`].Value" \
+            --no-paginate --output text > ~/oldbucketid.txt  
+            cat ~/oldbucketid.txt
       - run:
           name: Update cloudfront distribution
           command: |
@@ -401,6 +405,10 @@ jobs:
             --stack-name InitialStack \
             --parameter-overrides WorkflowID="udapeople-${CIRCLE_WORKFLOW_ID:0:7}" \
             --tags project=udapeople
+      - persist_to_workspace:
+        root: ~/
+        paths: 
+          - oldbucketid.txt  
       - attach_workspace:
           at: ~/
       - destroy-environment:
@@ -411,19 +419,16 @@ cleanup:
       - image: amazon/aws-cli
     steps:
       - checkout
-      - run:
-          name: Get old stack workflow id
-          command: |
-            # your code here
-            export OldWorkflowID="the id here"
-            export STACKS=[] #put the list of stacks here
+      - run: yum install -y tar gzip
+      - attach_workspace:
+          at: ~/
       - run:
           name: Remove old stacks and files
           command: |
-            if [[ "${STACKS[@]}" =~ "${OldWorkflowID}" ]]
-            then
-              # your code here
-            fi
+            export OldBucketID=$(cat ~/oldbucketid.txt)
+            aws s3 rm "s3://${OldBucketID}" --recursive
+            aws s3api delete-bucket --bucket ${OldBucketID}
+            
             
 
 workflows:
