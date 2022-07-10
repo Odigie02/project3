@@ -352,7 +352,8 @@ jobs:
       - run:
           name: Install dependencies
           command: |
-            yum install curl tar gzip -y 
+            apk add --update curl
+            apk add --no-cache aws-cli
       - attach_workspace:
           at: ~/
       - run:
