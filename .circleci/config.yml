@@ -359,29 +359,16 @@ jobs:
       - run:
           name: Backend smoke test.
           command: |
-            # tail -n 1 ~/project/.circleci/ansible/inventory.txt > backendIP.txt
-            # BACKEND_IP=$(cat backendIP.txt)
-            # export API_URL="http://${BACKEND_IP}:3030/api/status"
-            # echo "${API_URL}"
-
-            # if curl "${API_URL}" | grep "ok"
-            # then
-            #   return 0
-            # else
-            #   return 1
-            # fi
-            BACKEND_IP=$(aws cloudformation \
-            list-exports --query "Exports[?Name==\`backendIP\`].Value" \
-            --no-paginate --output text)
-
-            export API_URL="http://${BACKEND_IP}:3030"
+            tail -n 1 ~/project/.circleci/ansible/inventory.txt > backendIP.txt
+            BACKEND_IP=$(cat backendIP.txt)
+            export API_URL="http://${BACKEND_IP}:3030/api/status"
             echo "${API_URL}"
 
-            if curl -s "${API_URL}/api/status" | grep "ok"
+            if curl "${API_URL}" 
             then
-              exit 0
+              return 0
             else
-              exit 1
+              return 1
             fi
 
       - run:
