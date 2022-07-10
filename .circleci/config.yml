@@ -28,7 +28,7 @@ commands:
           command: |
             # Curl command here to see if there was a successful migration associated with the workflow id, store result in SUCCESS variable
             SUCCESS=$(curl --insecure  https://kvdb.io/U1N6g4AAqVAcaNKE924tee/migration_<< parameters.workflow_id >>)
-            if [[ $SUCCESS==1 ]];  
+            if [[ "${SUCCESS}" == 1 ]];  
             then
               cd ~/project/backend
               npm install
@@ -361,10 +361,10 @@ jobs:
           command: |
             tail -n 1 ~/project/.circleci/ansible/inventory.txt > backendIP.txt
             BACKEND_IP=$(cat backendIP.txt)
-            export API_URL="http://${BACKEND_IP}:3030"
+            export API_URL="http://${BACKEND_IP}:3030/api/status"
             echo "${API_URL}"
 
-            if curl "${API_URL}/api/status" | grep "ok"
+            if curl "${API_URL}" | grep "ok"
             then
               return 0
             else
