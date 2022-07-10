@@ -338,25 +338,22 @@ jobs:
 
   smoke-test:
     docker:
-      - image: alpine:latest
+      - image: amazon/aws-cli
     steps:
       - checkout
-      - attach_workspace:
-          at: ~/
       - run:
           name: Install dependencies
           command: |
-            apk add --update curl
-            apk add --no-cache aws-cli
+            yum install curl tar gzip -y 
+      - attach_workspace:
+          at: ~/
       - run:
           name: Get backend url
           command: |
-            BACKEND_IP=$(aws cloudformation \
-            list-exports --query "Exports[?Name==\`backendIP\`].Value" \
-            --no-paginate --output text)
+            tail -n 1 ~/project/.circleci/ansible/inventory.txt > backendIP.txt
+            BACKEND_IP=$(cat backendIP.txt)
             export API_URL="http://${BACKEND_IP}:3030"
             echo "${API_URL}"
-
       - run:
           name: Backend smoke test.
           command: |
