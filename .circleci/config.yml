@@ -348,9 +348,10 @@ jobs:
       - run:
           name: Backend smoke test.
           command: |
-            tail -n 1 ~/project/.circleci/ansible/inventory.txt > backendIP.txt
-            BACKEND_IP=$(cat backendIP.txt)
-            export API_URL="http://${BACKEND_IP}:3030"
+            # tail -n 1 ~/project/.circleci/ansible/inventory.txt > backendIP.txt
+            # BACKEND_IP=$(cat backendIP.txt)
+            BACKEND_IP=$(aws ec2 describe-instances --query 'Reservations[*].Instances[*].PublicIpAddress' --filters "Name=tag:project,Values=udapeople" --output text)
+            API_URL="http://${BACKEND_IP}:3030"
             echo "${API_URL}"
             sleep 150
 
