@@ -66,7 +66,6 @@ jobs:
           command: |
             cat \<< EOF > backend/.env
             ENVIRONMENT=production
-            VERSION=1
             TYPEORM_CONNECTION=postgres
             TYPEORM_MIGRATIONS_DIR=./src/migrations
             TYPEORM_ENTITIES=./src/modules/domain/**/*.entity.ts
@@ -217,7 +216,6 @@ jobs:
           command: |
             cat \<< EOF > backend/.env
             ENVIRONMENT=production
-            VERSION=1
             TYPEORM_CONNECTION=postgres
             TYPEORM_MIGRATIONS_DIR=./src/migrations
             TYPEORM_ENTITIES=./src/modules/domain/**/*.entity.ts
