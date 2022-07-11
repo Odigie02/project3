@@ -422,9 +422,8 @@ jobs:
         - run:
             name: Remove bucket created manually
             command: |
-              aws cloudformation \
-              list-exports --query "Exports[?Name==\`WorkflowID\`].Value" \   # remove lnes 425 to 427. it's just to simulate cleanup
-              --no-paginate --output text  > ~/oldbucketid.txt  
+              # REMOVE
+              aws cloudformation list-exports --query "Exports[?Name==\`WorkflowID\`].Value" --no-paginate --output text 
 
 
               cat ~/oldbucketid.txt
