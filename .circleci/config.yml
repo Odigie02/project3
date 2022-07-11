@@ -210,7 +210,6 @@ jobs:
       - image: circleci/node:13.8.0   
     steps:
       - checkout
-
       - restore_cache:
           keys: [backend-build]
       - run:
@@ -299,7 +298,7 @@ jobs:
                     
   deploy-backend:
     docker:
-      - image: python:3.7-alpine3.16         
+      - image: circleci/node:16.13.1-bullseye         
     steps:
       - checkout
       - attach_workspace:
