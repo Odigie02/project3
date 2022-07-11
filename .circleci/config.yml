@@ -70,7 +70,6 @@ jobs:
             TYPEORM_MIGRATIONS_DIR=./src/migrations
             TYPEORM_ENTITIES=./src/modules/domain/**/*.entity.ts
             TYPEORM_MIGRATIONS=./src/migrations/*.ts
-
             TYPEORM_HOST=${TYPEORM_HOST}
             TYPEORM_PORT=${TYPEORM_PORT}
             TYPEORM_USERNAME=${TYPEORM_USERNAME}
@@ -220,7 +219,6 @@ jobs:
             TYPEORM_MIGRATIONS_DIR=./src/migrations
             TYPEORM_ENTITIES=./src/modules/domain/**/*.entity.ts
             TYPEORM_MIGRATIONS=./src/migrations/*.ts
-
             TYPEORM_HOST=${TYPEORM_HOST}
             TYPEORM_PORT=${TYPEORM_PORT}
             TYPEORM_USERNAME=${TYPEORM_USERNAME}
