@@ -210,15 +210,9 @@ jobs:
       - image: circleci/node:13.8.0   
     steps:
       - checkout
-      # - attach_workspace:
-      #     at: ~/
+
       - restore_cache:
           keys: [backend-build]
-      # - run:
-      #     name: Install npm 
-      #     command: |
-      #       cd backend
-      #       npm install
       - run:
           name: prepare environment for backend build
           command: |
@@ -305,8 +299,7 @@ jobs:
                     
   deploy-backend:
     docker:
-      # - image: python:3.7-alpine3.16
-      - image: circleci/node:16.13.1-bullseye          
+      - image: python:3.7-alpine3.16         
     steps:
       - checkout
       - attach_workspace:
@@ -403,7 +396,7 @@ jobs:
           command: |
             aws cloudformation \
             list-exports --query "Exports[?Name==\`WorkflowID\`].Value" \
-            --no-paginate --output text > ~/oldbucketid.txt  
+            --no-paginate --output text  > ~/oldbucketid.txt  
             cat ~/oldbucketid.txt
       - run:
           name: Update cloudfront distribution
@@ -430,14 +423,6 @@ jobs:
         - run: yum install -y tar gzip
         - attach_workspace:
             at: ~/
-      # This is for simulation, remove as it's in cloudfront
-        - run:
-            name: Fetch and save the old bucket ID created manually
-            command: |
-              aws cloudformation \
-              list-exports --query "Exports[?Name==\`WorkflowID\`].Value" \
-              --no-paginate --output text > ~/oldbucketid.txt  
-              cat ~/oldbucketid.txt
         - run:
             name: Remove bucket created manually
             command: |
@@ -472,32 +457,32 @@ jobs:
 workflows:
   default:
     jobs:
-      # - build-frontend
-      # - build-backend
-      # - test-frontend:
-      #     requires: [build-frontend]
-      # - test-backend:
-      #     requires: [build-backend]
-      # - scan-backend:
-      #     requires: [build-backend]
-      # - scan-frontend:
-      #     requires: [build-frontend]
-      # - deploy-infrastructure:
-      #     requires: [test-frontend, test-backend, scan-frontend, scan-backend]
-      #     filters:
-      #       branches:
-      #         only: [master]
-      # - configure-infrastructure:
-      #     requires: [deploy-infrastructure]
-      # - run-migrations:
-      #     requires: [configure-infrastructure]
-      # - deploy-frontend:
-      #     requires: [run-migrations]
-      # - deploy-backend:
-      #     requires: [run-migrations]
-      # - smoke-test:
-          # requires: [deploy-backend, deploy-frontend]
-      # - cloudfront-update:
-      #     requires: [smoke-test]
-      - cleanup
-          # requires: [cloudfront-update]
+      - build-frontend
+      - build-backend
+      - test-frontend:
+          requires: [build-frontend]
+      - test-backend:
+          requires: [build-backend]
+      - scan-backend:
+          requires: [build-backend]
+      - scan-frontend:
+          requires: [build-frontend]
+      - deploy-infrastructure:
+          requires: [test-frontend, test-backend, scan-frontend, scan-backend]
+          filters:
+            branches:
+              only: [master]
+      - configure-infrastructure:
+          requires: [deploy-infrastructure]
+      - run-migrations:
+          requires: [configure-infrastructure]
+      - deploy-frontend:
+          requires: [run-migrations]
+      - deploy-backend:
+          requires: [run-migrations]
+      - smoke-test:
+          requires: [deploy-backend, deploy-frontend]
+      - cloudfront-update:
+          requires: [smoke-test]
+      - cleanup:
+          requires: [cloudfront-update]
