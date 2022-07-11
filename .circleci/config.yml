@@ -191,7 +191,7 @@ jobs:
       - attach_workspace:
           at: ~/
       - add_ssh_keys:
-            fingerprints: ["1f:a9:1e:34:55:23:f5:ff:a6:73:de:50:8c:59:05:cc"]
+            fingerprints: ["2b:08:8f:fe:d1:70:b5:91:1d:e7:f7:5c:06:f7:3a:bd"]
       - run:
           name: Install Ansible and aws-cli
           command: |
@@ -302,7 +302,7 @@ jobs:
       - attach_workspace:
           at: ~/
       - add_ssh_keys:
-            fingerprints: ["1f:a9:1e:34:55:23:f5:ff:a6:73:de:50:8c:59:05:cc"]
+            fingerprints: ["2b:08:8f:fe:d1:70:b5:91:1d:e7:f7:5c:06:f7:3a:bd"]
       - run:
           name: Install aws cli
           command: |
