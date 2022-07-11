@@ -179,7 +179,9 @@ jobs:
       - persist_to_workspace:
           root: ~/
           paths:
-            - project/.circleci/ansible/inventory.txt      
+            - project/.circleci/ansible/inventory.txt   
+      - destroy-environment:
+          workflow_id: "${CIRCLE_WORKFLOW_ID:0:7}"   
 
   configure-infrastructure:
     docker:
@@ -201,7 +203,7 @@ jobs:
             cd .circleci/ansible
             ansible-playbook -i inventory.txt configure-server.yml -vvv   
       - destroy-environment:
-          workflow_id: ${CIRCLE_WORKFLOW_ID:0:7}
+          workflow_id: "${CIRCLE_WORKFLOW_ID:0:7}"
 
   run-migrations:
     docker:
@@ -251,7 +253,9 @@ jobs:
             echo "Migration may have failed"
             fi
       - destroy-environment:
-          workflow_id: ${CIRCLE_WORKFLOW_ID:0:7}    
+          workflow_id: "${CIRCLE_WORKFLOW_ID:0:7}"
+      - revert-migrations:
+          workflow_id: "${CIRCLE_WORKFLOW_ID:0:7}"   
 
   deploy-frontend:
     docker:
@@ -267,10 +271,6 @@ jobs:
             unzip awscliv2.zip
             sudo ./aws/install
             aws --version
-      # - run:
-      #     name: Install dependencies
-      #     command: |
-      #       npm install
       - run:
           name: Get backend url
           command: |
@@ -290,7 +290,9 @@ jobs:
             tar tf artifact-"${CIRCLE_WORKFLOW_ID:0:7}.tar.gz"
             aws s3 cp dist s3://udapeople-${CIRCLE_WORKFLOW_ID:0:7} --recursive   
       - destroy-environment:
-          workflow_id: ${CIRCLE_WORKFLOW_ID:0:7}  
+          workflow_id: "${CIRCLE_WORKFLOW_ID:0:7}"
+      - revert-migrations:
+          workflow_id: "${CIRCLE_WORKFLOW_ID:0:7}" 
                     
   deploy-backend:
     docker:
@@ -331,7 +333,9 @@ jobs:
             cat ~/project/.circleci/ansible/inventory.txt
             ansible-playbook -i ~/project/.circleci/ansible/inventory.txt deploy-backend.yml -vvv           
       - destroy-environment:
-          workflow_id: ${CIRCLE_WORKFLOW_ID:0:7}
+          workflow_id: "${CIRCLE_WORKFLOW_ID:0:7}"
+      - revert-migrations:
+          workflow_id: "${CIRCLE_WORKFLOW_ID:0:7}"
           
   smoke-test:
     docker:
@@ -407,7 +411,9 @@ jobs:
       - attach_workspace:
           at: ~/
       - destroy-environment:
-          workflow_id: ${CIRCLE_WORKFLOW_ID:0:7}
+          workflow_id: "${CIRCLE_WORKFLOW_ID:0:7}"
+      - revert-migrations:
+          workflow_id: "${CIRCLE_WORKFLOW_ID:0:7}"
 
   cleanup:
       docker:
@@ -444,10 +450,8 @@ jobs:
                 aws cloudformation delete-stack --stack-name "udapeople-frontend-${OldWorkflowID}"
               else
                 echo "No old stacks to be deleted"
-              fi
-
-            
-
+              fi            
+              
 workflows:
   default:
     jobs:
