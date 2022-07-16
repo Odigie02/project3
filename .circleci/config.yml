@@ -444,7 +444,7 @@ jobs:
               # --stack-status-filter CREATE_COMPLETE --no-paginate --output text))
               # echo Stack names: "${STACKS[@]}" 
 
-              if [[ "${OldWorkflowID}" == ' ']]
+              if [ -z "${OldWorkflowID}" ]
               then 
                 echo "No Old Stacks" 
               else
