@@ -446,6 +446,7 @@ jobs:
           
               if [[ "${CIRCLE_WORKFLOW_ID:0:7}" != "${OldWorkflowID}" ]] && [ -n "${OldWorkflowID}" ] # if current wfid is not the same as owfid and owfid is not an empty string then delet stack. Note -z is for empty string 
               then
+                echo "Deleting Stacks"
                 aws cloudformation delete-stack --stack-name "udapeople-backend-${OldWorkflowID}"
                 aws s3 rm "s3://udapeople-${OldWorkflowID}" --recursive
                 aws cloudformation delete-stack --stack-name "udapeople-frontend-${OldWorkflowID}"
