@@ -444,18 +444,17 @@ jobs:
               # --stack-status-filter CREATE_COMPLETE --no-paginate --output text))
               # echo Stack names: "${STACKS[@]}" 
 
-              if [ -z "${OldWorkflowID}" ]
-              then 
-                echo "No Old Stacks" 
+              # if [ -z "${OldWorkflowID}" ]
+          
+              if [[ "${CIRCLE_WORKFLOW_ID:0:7}" != "${OldWorkflowID}" ]] && [ -n "${OldWorkflowID}" ]
+              then
+                aws cloudformation delete-stack --stack-name "udapeople-backend-${OldWorkflowID}"
+                aws s3 rm "s3://udapeople-${OldWorkflowID}" --recursive
+                aws cloudformation delete-stack --stack-name "udapeople-frontend-${OldWorkflowID}"
               else
-                echo "Stacks to delete"
-                # if [[ "${CIRCLE_WORKFLOW_ID:0:7}" != "${OldWorkflowID}" ]]
-                # then
-                #   aws cloudformation delete-stack --stack-name "udapeople-backend-${OldWorkflowID}"
-                #   aws s3 rm "s3://udapeople-${OldWorkflowID}" --recursive
-                #   aws cloudformation delete-stack --stack-name "udapeople-frontend-${OldWorkflowID}"
-                # fi
-              fi            
+                echo "No Old stacks"
+              fi
+                        
               
 workflows:
   default:
