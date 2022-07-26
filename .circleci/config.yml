@@ -139,6 +139,7 @@ jobs:
     steps:
       - checkout
       - run: yum install -y tar gzip
+      - run: touch $BASH_ENV
       - run: 
           name: Get Old back-end server IP if it exists #This is for cleaning up previous version
           command: |
