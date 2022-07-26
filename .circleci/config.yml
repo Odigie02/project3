@@ -144,7 +144,8 @@ jobs:
           name: Get Old back-end server IP if it exists #This is for cleaning up previous version
           command: |
             echo 'export OLD_BACKEND_IP=$(aws ec2 describe-instances --query 'Reservations[*].Instances[*].PublicIpAddress' --filters "Name=tag:project,Values=udapeople" --output text)' >> BASH_ENV
-            source $BASH_ENV
+            echo $OLD_BACKEND_IP
+            # source $BASH_ENV
             echo "************************************************************"
             echo $OLD_BACKEND_IP
       - run:
