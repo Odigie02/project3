@@ -145,7 +145,7 @@ jobs:
             echo 'export OLD_BACKEND_IP=$(aws ec2 describe-instances --query 'Reservations[*].Instances[*].PublicIpAddress' --filters "Name=tag:project,Values=udapeople" --output text)' >> BASH_ENV
             source $BASH_ENV
             echo "************************************************************"
-            echo $BASH_ENV
+            echo $OLD_BACKEND_IP
       - run:
           name: Ensure back-end infrastructure exists
           command: |
