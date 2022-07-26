@@ -143,11 +143,11 @@ jobs:
       - run: 
           name: Get Old back-end server IP if it exists #This is for cleaning up previous version
           command: |
-            # echo 'export OLD_BACKEND_IP=$(aws ec2 describe-instances --query 'Reservations[*].Instances[*].PublicIpAddress' --filters "Name=tag:project,Values=udapeople" --output text)' >> BASH_ENV
-            aws ec2 describe-instances --query 'Reservations[*].Instances[*].PublicIpAddress' --filters "Name=tag:project,Values=udapeople" --output text > oldbackendIP.txt
-            cat oldbackendIP.txt
-            cat oldbackendIP.txt >> $BASH_ENV
-            # echo $OLD_BACKEND_IP
+            echo 'export OLD_BACKEND_IP=(aws ec2 describe-instances --query 'Reservations[*].Instances[*].PublicIpAddress' --filters "Name=tag:project,Values=udapeople" --output text)' >> BASH_ENV
+            #aws ec2 describe-instances --query 'Reservations[*].Instances[*].PublicIpAddress' --filters "Name=tag:project,Values=udapeople" --output text > oldbackendIP.txt
+            #cat oldbackendIP.txt
+            #cat oldbackendIP.txt >> $BASH_ENV
+            echo $OLD_BACKEND_IP
             # source $BASH_ENV
             echo "************************************************************"
             echo $BASH_ENV
@@ -172,7 +172,7 @@ jobs:
           command: |
             aws ec2 describe-instances --query 'Reservations[*].Instances[*].PublicIpAddress' --filters "Name=tag:project,Values=udapeople" --output text >> ~/project/.circleci/ansible/inventory.txt
             cat ~/project/.circleci/ansible/inventory.txt 
-            sed -i "/${OLD_BACKEND_IP}/d" ~/project/.circleci/ansible/inventory.txt 
+            sed -i "/${BASH_ENV}/d" ~/project/.circleci/ansible/inventory.txt 
             cat ~/project/.circleci/ansible/inventory.txt             
       - persist_to_workspace:
           root: ~/
