@@ -681,7 +681,7 @@ jobs:
     steps:
       - checkout
       - add_ssh_keys:
-          fingerprints: ["50:23:0c:56:90:20:87:6a:ed:4e:1b:49:f5:41:86:b5"]
+          fingerprints: ["1f:a9:1e:34:55:23:f5:ff:a6:73:de:50:8c:59:05:cc"]
       - attach_workspace:
           at: .circleci/ansible
       - run:
@@ -778,7 +778,7 @@ jobs:
     steps:
       - checkout
       - add_ssh_keys:
-          fingerprints: ["50:23:0c:56:90:20:87:6a:ed:4e:1b:49:f5:41:86:b5"]
+          fingerprints: ["1f:a9:1e:34:55:23:f5:ff:a6:73:de:50:8c:59:05:cc"]
       - attach_workspace:
           at: .circleci/ansible
       - run:
@@ -962,13 +962,13 @@ workflows:
           requires: [deploy-infrastructure]
       # - run-migrations:
       #     requires: [configure-infrastructure]
-      # - deploy-frontend:
-      #     requires: [run-migrations]
-      # - deploy-backend:
-      #     requires: [run-migrations]
+      - deploy-frontend:
+          requires: [deploy-infrastructure]
+      - deploy-backend:
+          requires: [deploy-infrastructure]
       # - smoke-test:
       #     requires: [deploy-backend, deploy-frontend]
-      - cloudfront-update
-          # requires: [smoke-test]
+      - cloudfront-update:
+          requires: [deploy-frontend]
       - cleanup:
           requires: [cloudfront-update]
